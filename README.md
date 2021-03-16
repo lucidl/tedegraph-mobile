@@ -6,3 +6,5 @@ Miniature reader of Wikipedia articles. Inspired by [Tedegraph](https://github.c
 foto: https://creativecommons.org/licenses/by/2.5 CC BY 2.5:Patrick J. Lynch, medical illustrator
 
 install from [Google Play Store](https://play.google.com/store/apps/details?id=org.tedegraph.tedegraph)
+
+if you are creative, you can contribute here https://www.facebook.com/groups/826250551297521
