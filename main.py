@@ -38,7 +38,7 @@ Builder.load_string('''
         orientation: 'vertical'
         CustomTextInput:
             id: url_input
-            focus: True
+            #focus: True
             multiline: False
         Button:
             text: 'OK'    
@@ -140,6 +140,7 @@ class Tedegraph(App):
     def download_nltk(self):
         if not os.path.isdir(os.path.join(self.data_dir, "nltk_data")):
             os.chdir(self.data_dir)
+            print(os.getcwd())
             
             # https://stackoverflow.com/questions/38916452/nltk-download-ssl-certificate-verify-failed
             import nltk
@@ -151,10 +152,10 @@ class Tedegraph(App):
                     pass
                 else:
                     ssl._create_default_https_context = _create_unverified_https_context
-                nltk.download('punkt')
+                nltk.download('punkt', download_dir = self.data_dir)
                 return True
-            except:
-                popup = Popup(title='No Internet connection',
+            except Exception as e:
+                popup = Popup(title='NLTK download failed: ' + str(e),
                               size_hint = (None, None), size = (400, 400),
                               auto_dismiss=True)
                 popup.open()
@@ -166,15 +167,21 @@ class Tedegraph(App):
         request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
                              Permission.READ_EXTERNAL_STORAGE])
         try:
-            Environment = autoclass('android.os.Environment')
-            self.working_directory = os.path.join(Environment.getExternalStorageDirectory().getAbsolutePath(), "tdg_articles")
+            if autoclass('android.os.Build$VERSION').SDK_INT >= 29:
+                Context = autoclass('android.content.Context')
+                self.working_directory = os.path.join(Context.getExternalFilesDir(None).getAbsolutePath(), "tdg_articles")
+                self.data_dir = os.path.join(Context.getExternalFilesDir(None).getAbsolutePath(), "nltk")
+            else:
+                Environment = autoclass('android.os.Environment')
+                self.working_directory = os.path.join(Environment.getExternalStorageDirectory().getAbsolutePath(), "tdg_articles")
+                self.data_dir = os.path.join(Environment.getExternalStorageDirectory().getAbsolutePath(), "nltk")
         except:
             self.working_directory = os.path.join(App.get_running_app().user_data_dir, "tdg_articles")
+            self.data_dir = os.path.join(App.get_running_app().user_data_dir, "nltk")
         
         if not os.path.exists(self.working_directory):
             os.makedirs(self.working_directory)
         
-        self.data_dir = os.path.join(os.path.abspath(getattr(self, 'user_data_dir')), "nltk")
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
         
@@ -315,7 +322,7 @@ class Tedegraph(App):
             images = [fn for fn in glob.glob(img_file_name + "*") if not fn.endswith("txt")]
             if images:
                 img_file_name = images[0]
-                self.ms.ids.img.source = img_file_name
+                self.ms.ids.img.source = os.path.join(self.working_directory, self.current_article, img_file_name)
             else:
                 self.ms.ids.img.source = ""
         else:

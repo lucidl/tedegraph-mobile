@@ -82,7 +82,7 @@ def separate_strings(s1, s2):
 
 def get_soup_from_url(url):
   if url.startswith('http'):
-    html = requests.get(url).content
+    html = requests.get(url, timeout=5).content
     soup = BeautifulSoup(html, features = "html.parser")
   return soup
 
