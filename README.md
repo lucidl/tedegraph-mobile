@@ -13,3 +13,5 @@ foto: https://creativecommons.org/licenses/by/2.5 CC BY 2.5:Patrick J. Lynch, me
 install from [Google Play Store](https://play.google.com/store/apps/details?id=org.tedegraph.tedegraph)
 
 if you are creative, you can contribute here https://www.facebook.com/groups/826250551297521
+
+This project is obsolete. For newer version of Android you can use rather [Tededroid](https://github.com/lucidl/tededroid) written Java.
